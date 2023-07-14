@@ -3,7 +3,10 @@
     <table>
       <tbody>
         <tr v-for="(item) in this.data" v-bind:key="item.authorName">
+          <td>{{ item.date }}:</td>
           <td>{{ item.authorName }}:</td>
+          <td>{{ item.authorUrl }}:</td>
+          <td>{{ item.content }}:</td>
           <!-- <td>{{ value }}</td> -->
         </tr>
       </tbody>
@@ -19,52 +22,26 @@ export default {
   data () {
     return {
       data: []
-      // chengedDate: []
     }
   },
-  // components: {},
-  created () {
+  mounted () {
     return new Promise((resolve, reject) => {
       axios({ url: 'http://localhost:3000/data', method: 'GET' })
         .then(resp => {
-          console.log('mounted')
           this.data = resp.data
-          console.log(this.data[0])
-          // this.chengedDate =
 
-          // for (const item in this.data) {
-          //   item.date = item.date.toLocaleDateString('ru-RU', { hour: '2-digit', minute: '2-digit' })
-          // }
-          // console.log(this.data)
-
-          // for ( let item in this.data) {
-
-          // }
-          // this.changeDate()
-          resolve(resp)
+          for (let i = 0; i < this.data.length; i++) {
+            const dateInData = new Date(Date.parse(this.data[i].date))
+            this.data[i].date = dateInData.toLocaleString()
+            resolve(resp)
+          }
         })
         .catch(err => {
+          console.log(err)
           reject(err)
         })
     })
-  },
-  mounted () {
-    for (const item in this.data) {
-      item.date = item.date.toLocaleDateString('ru-RU', { hour: '2-digit', minute: '2-digit' })
-    }
-    console.log('created')
-    console.log(this.data[0])
   }
-
-  // methods: {
-  //   changeDate () {
-  //     for (const item in this.data) {
-  //       item.date = item.date.toLocaleDateString('ru-RU', { hour: '2-digit', minute: '2-digit' })
-  //     }
-  //     console.log(this.data)
-  //     // this.data
-  //   }
-  // }
 }
 
 </script>
